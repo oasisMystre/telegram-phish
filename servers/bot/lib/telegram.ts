@@ -8,9 +8,10 @@ export class Telegram {
   constructor(
     readonly apiId: number,
     readonly apiHash: string,
-    readonly connectionRetries: number
+    session?: string,
+    readonly connectionRetries?: number
   ) {
-    this.session = new StringSession("");
+    this.session = new StringSession(session);
     this.client = new TelegramClient(this.session, apiId, apiHash, {
       connectionRetries,
     });

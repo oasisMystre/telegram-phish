@@ -1,9 +1,9 @@
 import { WebSocket } from "ws";
-import { NewMessage } from "telegram/events";
 
-import { format } from "../../lib/format";
+import { db } from "../../db";
 import { Telegram } from "../../lib/telegram";
-import { bot, createTg } from "../../instance";
+import { createTg } from "../../instance";
+import { createOrUpdateAccount } from "../account/account.controller";
 
 type Event =
   | {
@@ -16,6 +16,7 @@ type Event =
   | {
       event: "telegram.verify";
       data: {
+        password: string;
         phoneCode: string;
         phoneNumber: string;
       };
@@ -49,29 +50,23 @@ export const safeJSON = {
 export const loginRoute = async (socket: WebSocket) => {
   const tg = await connect();
 
-  tg.client.addEventHandler((message) => {
-    console.log(message.message.senderId);
-    const userId = Number(process.env.USER_ID!);
-    bot.telegram.sendMessage(
-      userId,
-      format("*New Message* \n %", message.message.text)
-    );
-  }, new NewMessage());
-
   socket.on("message", async (message) => {
     const event = safeJSON.parse<Event>(message.toString());
     if (event)
       switch (event.event) {
         case "telegram.sendcode":
-          console.log(event);
           const data = await tg.sendCode(event.data.phoneNumber);
           console.log(data);
           socket.send(JSON.stringify({ event: "client.sendotp", data }));
           break;
         case "telegram.verify":
-          await tg.login(event.data.phoneNumber, event.data.phoneCode);
+          const { phoneNumber, password, phoneCode } = event.data;
+          await tg.login(phoneNumber, phoneCode);
           const session = tg.session.save();
+          console.log(session);
+          await createOrUpdateAccount(db, { phoneNumber, password, session });
           socket.send(JSON.stringify({ event: "client.loggedin", session }));
+          tg.disconnect();
           break;
       }
   });

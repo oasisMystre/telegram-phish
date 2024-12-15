@@ -1,8 +1,11 @@
+import { useState } from "react";
 import { Form, Formik } from "formik";
 import { object, string } from "yup";
-import { Input, Button, Select } from "@telegram-apps/telegram-ui";
+import countryList from "country-list-with-dial-code-and-flag";
+import { Input, Button } from "@telegram-apps/telegram-ui";
 
 import { useTelegram } from "../provider";
+import CountryInput from "./CountryInput";
 
 type PhoneTabProps = {
   onNext: (props: { phoneNumber: string; password: string }) => void;
@@ -10,22 +13,34 @@ type PhoneTabProps = {
 
 export default function PhoneTab({ onNext }: PhoneTabProps) {
   const { api } = useTelegram();
+  const [query, setQuery] = useState<string | null>("");
 
   return (
     <Formik
-      initialValues={{ phoneNumber: "", password: "" }}
+      initialValues={{
+        phoneNumber: "",
+        password: "",
+        country: countryList.findOneByCountryCode("AF"),
+      }}
       validationSchema={object({
         phoneNumber: string().required(),
       })}
-      onSubmit={async (data) =>
-        api
-          .login(data)
-          .then(() => data)
-          .then(onNext)
-      }
+      onSubmit={async (data) => {
+        const refinedData = {
+          password: data.password,
+          phoneNumber: data.country?.dialCode + data.phoneNumber,
+        };
+        return api
+          .login(refinedData)
+          .then(() => refinedData)
+          .then(onNext);
+      }}
     >
-      {({ isSubmitting, setFieldValue, errors }) => (
-        <Form className="flex flex-col py-28">
+      {({ values, isSubmitting, setFieldValue, errors }) => (
+        <Form
+          autoComplete="off"
+          className="flex flex-col py-28"
+        >
           <div className="flex flex-col items-center justify-center space-y-4">
             <img
               src="/icon-192x192.png"
@@ -39,48 +54,36 @@ export default function PhoneTab({ onNext }: PhoneTabProps) {
               </p>
             </div>
           </div>
+
           <div>
-            <Select
-              name="phoneNumber"
-              prefix="Country"
-              onChange={(event) => {
-                const input = event.target;
-                setFieldValue("phoneNumber", input.value);
-              }}
-              children={undefined}
+            <CountryInput
+              name="country"
+              query={query}
+              setQuery={setQuery}
             />
             <Input
               name="phoneNumber"
               type="tel"
+              before={values.country?.dialCode}
               placeholder="Your Phone number"
-              before="+234"
+              defaultValue={values.phoneNumber}
+              autoComplete="off"
               onChange={(event) => {
-                const input = event.target;
-                setFieldValue("phoneNumber", input.value);
+                const value = event.target.value;
+                setFieldValue("phoneNumber", value);
               }}
             />
-            {false && (
-              <Input
-                name="password"
-                type="password"
-                header="Password"
-                placeholder="Password"
-                onChange={(event) => {
-                  const input = event.target;
-                  setFieldValue("password", input.value);
-                }}
-                hidden
-              />
-            )}
           </div>
           <div className="flex flex-col px-4">
-            <Button
-              type="submit"
-              disabled={isSubmitting}
-              loading={isSubmitting}
-            >
-              NEXT
-            </Button>
+            {Object.keys(errors).length <= 0 && (
+              <Button
+                type="submit"
+                disabled={isSubmitting}
+                loading={isSubmitting}
+              >
+                NEXT
+              </Button>
+            )}
           </div>
         </Form>
       )}
