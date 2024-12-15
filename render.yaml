@@ -1,10 +1,8 @@
 services:
   - type: web
     name: bot
-    runtime: node
-    plan: free
-    buildCommand: cd servers/bot && bun install && bun run build
-    startCommand: cd servers/bot && bun migrate && bun run index.ts
+    runtime: docker
+    dockerfilePath: servers/bot/Dockerfile
     envVars:
       - fromGroup: servers/bot
       - key: APP_URL
@@ -20,7 +18,7 @@ services:
   - type: web
     name: www
     runtime: static
-    buildCommand: cd web/www && bun install && bun build
+    buildCommand: cd web/www && yarn install && yarn build
     staticPublishPath: cd web/www/dist
     envVars:
       - fromGroup: web/www
