@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: bot
+    runtime: node
+    plan: free
+    buildCommand: cd servers/bot && bun install
+    startCommand: cd servers/bot && bun run index.ts
+    envVars:
+      - fromGroup: web/bot
+      - key: APP_URL
+        fromService:
+          type: web
+          name: www
+          envVarKey: RENDER_EXTERNAL_URL
+
+  - type: web
+    name: www
+    runtime: static
+    buildCommand: cd web/www && bun install && bun build
+    staticPublishPath: cd web/www/dist
+    envVars:
+      - fromGroup: web/www
+      - key: VITE_APP_API_URL
+        fromService:
+          type: web
+          name: bot
+          envVarKey: RENDER_EXTERNAL_URL

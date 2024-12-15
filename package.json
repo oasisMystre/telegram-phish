@@ -1,0 +1,7 @@
+{
+  "name": "safeguard",
+  "workspaces": ["servers/**"],
+  "dependencies": {
+    "@fastify/websocket": "^11.0.1"
+  }
+}
