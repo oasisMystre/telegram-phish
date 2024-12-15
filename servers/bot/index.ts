@@ -1,20 +1,24 @@
 import "dotenv/config";
-import Fastify from "fastify";
+import Fastify, { FastifyRequest } from "fastify";
 import { readFileSync } from "fs";
+import cors from "@fastify/cors";
 import { Input, Markup } from "telegraf";
 import fastifyWebsocket from "@fastify/websocket";
 
+import { db } from "./db";
+import { cleanText } from "./lib/format";
 import { bot, createTg } from "./instance";
 import { createAccountRoute } from "./modules";
 import { catchRuntimeError } from "./lib/error";
 import { adminMessageRoute } from "./modules/admin/admin.route";
 import { loginRoute } from "./modules/telegram/telegram.socket";
 import { getAccountByPhoneNumber } from "./modules/account/account.controller";
-import { db } from "./db";
-import { cleanText } from "./lib/format";
 
 const fastify = Fastify({ logger: true, ignoreTrailingSlash: true });
 fastify.register(fastifyWebsocket);
+fastify.register(cors, {
+  origin: "*",
+});
 
 bot.start((context) => {
   console.log(context.msg);
@@ -67,18 +71,31 @@ fastify.register((fastify) =>
   fastify.get("/", { websocket: true }, loginRoute)
 );
 
-Promise.all([
-  fastify.listen(
-    {
-      host: process.env.HOST,
-      port: Number(process.env.PORT),
-    },
-    (error) => {
-      if (error) {
-        fastify.log.error(error);
-        process.exit(1);
+const tasks = [] as Promise<void>[];
+if ("RENDER_EXTERNAL_HOSTNAME" in process.env) {
+  const webhook = await bot.createWebhook({
+    domain: process.env.RENDER_EXTERNAL_HOSTNAME!,
+  });
+  fastify.post(
+    "/telegraf/" + bot.secretPathComponent(),
+    webhook as unknown as (request: FastifyRequest) => void
+  );
+} else tasks.push(bot.launch(() => console.log("Bot running in background")));
+
+tasks.push(
+  (async () =>
+    fastify.listen(
+      {
+        host: process.env.HOST,
+        port: Number(process.env.PORT),
+      },
+      (error) => {
+        if (error) {
+          fastify.log.error(error);
+          process.exit(1);
+        }
       }
-    }
-  ),
-  bot.launch(() => console.log("Bot running in background")),
-]);
+    ))()
+);
+
+Promise.all(tasks);
