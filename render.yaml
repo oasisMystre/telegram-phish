@@ -19,7 +19,7 @@ services:
     name: www
     runtime: static
     buildCommand: cd web/www && yarn install && yarn build
-    staticPublishPath: cd web/www/dist
+    staticPublishPath: web/www/dist
     envVars:
       - fromGroup: web/www
       - key: VITE_APP_API_URL
