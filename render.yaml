@@ -3,7 +3,7 @@ services:
     name: bot
     runtime: node
     plan: free
-    buildCommand: cd servers/bot && bun install
+    buildCommand: cd servers/bot && bun install && bun run build
     startCommand: cd servers/bot && bun migrate && bun run index.ts
     envVars:
       - fromGroup: servers/bot

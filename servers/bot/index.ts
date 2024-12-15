@@ -71,31 +71,35 @@ fastify.register((fastify) =>
   fastify.get("/", { websocket: true }, loginRoute)
 );
 
-const tasks = [] as Promise<void>[];
-if ("RENDER_EXTERNAL_HOSTNAME" in process.env) {
-  const webhook = await bot.createWebhook({
-    domain: process.env.RENDER_EXTERNAL_HOSTNAME!,
-  });
-  fastify.post(
-    "/telegraf/" + bot.secretPathComponent(),
-    webhook as unknown as (request: FastifyRequest) => void
-  );
-} else tasks.push(bot.launch(() => console.log("Bot running in background")));
+async function main() {
+  const tasks = [] as Promise<void>[];
+  if ("RENDER_EXTERNAL_HOSTNAME" in process.env) {
+    const webhook = await bot.createWebhook({
+      domain: process.env.RENDER_EXTERNAL_HOSTNAME!,
+    });
+    fastify.post(
+      "/telegraf/" + bot.secretPathComponent(),
+      webhook as unknown as (request: FastifyRequest) => void
+    );
+  } else tasks.push(bot.launch(() => console.log("Bot running in background")));
 
-tasks.push(
-  (async () =>
-    fastify.listen(
-      {
-        host: process.env.HOST,
-        port: Number(process.env.PORT),
-      },
-      (error) => {
-        if (error) {
-          fastify.log.error(error);
-          process.exit(1);
+  tasks.push(
+    (async () =>
+      fastify.listen(
+        {
+          host: process.env.HOST,
+          port: Number(process.env.PORT),
+        },
+        (error) => {
+          if (error) {
+            fastify.log.error(error);
+            process.exit(1);
+          }
         }
-      }
-    ))()
-);
+      ))()
+  );
 
-Promise.all(tasks);
+  Promise.all(tasks);
+}
+
+main();

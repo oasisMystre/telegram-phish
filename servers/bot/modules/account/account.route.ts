@@ -1,7 +1,6 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 
 import { db } from "../../db";
-import { bot } from "../../bot";
 import { insertAccountSchema } from "../../db/zod";
 import { createOrUpdateAccount } from "./account.controller";
 
