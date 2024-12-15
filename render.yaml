@@ -4,9 +4,9 @@ services:
     runtime: node
     plan: free
     buildCommand: cd servers/bot && bun install
-    startCommand: cd servers/bot && bun run index.ts
+    startCommand: cd servers/bot && bun migrate && bun run index.ts
     envVars:
-      - fromGroup: web/bot
+      - fromGroup: servers/bot
       - key: APP_URL
         fromService:
           type: web
