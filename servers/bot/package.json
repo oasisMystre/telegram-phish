@@ -1,5 +1,6 @@
 {
   "name": "bot",
+  "private": true,
   "scripts": {
     "dev": "bun run index.ts",
     "migrate": "drizzle-kit generate && drizzle-kit migrate"
