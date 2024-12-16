@@ -20,8 +20,6 @@ fastify.register(cors, {
 });
 
 bot.start((context) => {
-  console.log(context.msg);
-  console.log(context.msg.chat);
   const message = readFileSync("./locale/en/start.md", "utf-8").replace(
     /%id/,
     String(context.botInfo!.id)
