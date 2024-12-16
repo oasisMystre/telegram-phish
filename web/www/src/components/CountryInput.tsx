@@ -53,7 +53,7 @@ export default function CountryInput({
             <MdChevronRight className="rotate-90 text-2xl text-[var(--telegram-hint-color)] group-data-[focus]:-rotate-90" />
           }
         />
-        <ComboboxOptions className="absolute top-24 inset-x-0  px-4 z-20">
+        <ComboboxOptions className="absolute top-16 md:top-24 inset-x-0  px-4 z-20">
           <List className="max-h-sm bg-[var(--telegram-bg-color)] overflow-y-scroll shadow-lg shadow-black/50 dark:shadow-lg dark:shadow-black/80">
             {countries.map((country, index) => (
               <ComboboxOption

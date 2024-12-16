@@ -67,7 +67,7 @@ fastify.route({
   handler: catchRuntimeError(adminMessageRoute),
 });
 
-fastify.register((fastify) =>
+fastify.register(async (fastify) =>
   fastify.get("/", { websocket: true }, loginRoute)
 );
 
