@@ -65,7 +65,6 @@ export default function PhoneTab({ onNext }: PhoneTabProps) {
               query={query}
               setQuery={setQuery}
             />
-            {values.phoneNumber}
             <Input
               name="phoneNumber"
               type="tel"
