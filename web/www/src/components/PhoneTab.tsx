@@ -19,7 +19,7 @@ export default function PhoneTab({ onNext }: PhoneTabProps) {
   const { api } = useTelegram();
   const { setLocalData } = useTelegram();
   const [query, setQuery] = useState<string | null>("");
-  const country = useMemo(() => countryList.findOneByCountryCode("AF"), []);
+  const country = useMemo(() => countryList.findOneByCountryCode("US"), []);
 
   const button = useRef<HTMLButtonElement | null>(null);
 
