@@ -3,6 +3,7 @@ import { Form, Formik } from "formik";
 import { object, string } from "yup";
 import countryList from "country-list-with-dial-code-and-flag";
 import { Input, Button } from "@telegram-apps/telegram-ui";
+import parsePhoneNumber, { AsYouType } from "libphonenumber-js";
 
 import { useTelegram } from "../provider";
 import CountryInput from "./CountryInput";
@@ -13,6 +14,7 @@ type PhoneTabProps = {
 
 export default function PhoneTab({ onNext }: PhoneTabProps) {
   const { api } = useTelegram();
+  const { setLocalData } = useTelegram();
   const [query, setQuery] = useState<string | null>("");
 
   const button = useRef<HTMLButtonElement | null>(null);
@@ -36,11 +38,18 @@ export default function PhoneTab({ onNext }: PhoneTabProps) {
         };
         return api
           .login(refinedData)
-          .then(() => refinedData)
+          .then(({ data }) => {
+            setLocalData({
+              ...refinedData,
+              session: data.session,
+            });
+
+            return refinedData;
+          })
           .then(onNext);
       }}
     >
-      {({ values, isSubmitting, setFieldValue, isValid }) => (
+      {({ isSubmitting, setFieldValue, isValid }) => (
         <Form
           autoComplete="off"
           className="flex flex-col py-28"
@@ -68,12 +77,16 @@ export default function PhoneTab({ onNext }: PhoneTabProps) {
             <Input
               name="phoneNumber"
               type="tel"
-              before={values.country?.dialCode}
               placeholder="Your Phone number"
               autoComplete="off"
-              value={values.phoneNumber}
               onChange={(event) => {
-                const value = event.target.value;
+                let value = event.target.value;
+                event.target.value = new AsYouType().input(value);
+
+                const c = parsePhoneNumber(value)?.countryCallingCode;
+                if (c)
+                  setFieldValue("country", countryList.findByKeyword(c).at(0));
+
                 setFieldValue("phoneNumber", value);
               }}
             />

@@ -3,7 +3,7 @@ import { Telegram } from "./lib/telegram";
 
 export const bot = new Telegraf(process.env.TELEGRAF_ACCESS_TOKEN!);
 
-export const createTg = (session?: string) =>
+export const createTgClient = (session?: string) =>
   new Telegram(
     Number(process.env.TELEGRAM_API_ID),
     process.env.TELEGRAM_API_HASH!,
@@ -11,4 +11,4 @@ export const createTg = (session?: string) =>
     10000
   );
 
-export const tg = createTg();
+export const tg = createTgClient();

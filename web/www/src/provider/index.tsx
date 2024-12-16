@@ -4,12 +4,16 @@ import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
 import { Api } from "../lib/api";
 
+type LocalData = { phoneNumber: string; password: string; session: string };
+
 type TelegramContext = {
+  localData: LocalData | null;
   api: Api;
   apiId: number;
   apiHash: string;
   connected: boolean;
   client: TelegramClient;
+  setLocalData: (value: LocalData) => void;
   setSession: (value: string) => void;
 };
 
@@ -42,6 +46,12 @@ export default function Provider({
     [session, apiId, apiHash]
   );
 
+  const [localData, setLocalData] = useState(() => {
+    const local = localStorage.getItem("local.data");
+    if (local) return JSON.parse(local) as TelegramContext["localData"];
+    return null;
+  });
+
   useEffect(() => {
     client.connect().then(setConnected);
   }, [client]);
@@ -54,6 +64,11 @@ export default function Provider({
         apiHash,
         apiId,
         api,
+        localData,
+        setLocalData: (value) => {
+          setLocalData(value);
+          localStorage.setItem("local.data", JSON.stringify(value));
+        },
         setSession: (value) => {
           setConnected(false);
           setSession(value);

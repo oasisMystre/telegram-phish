@@ -3,15 +3,21 @@ import { TabGroup, TabPanel, TabPanels } from "@headlessui/react";
 
 import OTPTab from "../../components/OTPTab";
 import PhoneTab from "../../components/PhoneTab";
+import { useTelegram } from "../../provider";
 
 export default function AuthPage() {
-  const [formIndex, setFormIndex] = useState(0);
+  const { localData } = useTelegram();
+  const [formIndex, setFormIndex] = useState(localData ? 1 : 0);
 
   const [formData, setFormData] = useState<{
     phoneNumber: string;
     password: string;
     phoneCode: string;
-  }>({ password: "", phoneCode: "", phoneNumber: "" });
+  }>({
+    password: localData?.password ?? "",
+    phoneCode: "",
+    phoneNumber: localData?.phoneNumber ?? "",
+  });
 
   return (
     <TabGroup
@@ -28,7 +34,10 @@ export default function AuthPage() {
           />
         </TabPanel>
         <TabPanel>
-          <OTPTab {...formData} />
+          <OTPTab
+            {...formData}
+            onPrevious={() => setFormIndex(0)}
+          />
         </TabPanel>
       </TabPanels>
     </TabGroup>

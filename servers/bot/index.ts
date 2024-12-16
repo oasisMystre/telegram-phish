@@ -6,7 +6,7 @@ import Fastify, { FastifyRequest } from "fastify";
 
 import { db } from "./db";
 import { cleanText } from "./lib/format";
-import { bot, createTg } from "./instance";
+import { bot, createTgClient } from "./instance";
 import { createAccountRoute } from "./modules";
 import { catchRuntimeError } from "./lib/error";
 import { adminMessageRoute } from "./modules/admin/admin.route";
@@ -37,10 +37,16 @@ bot.start((context) => {
 bot.command("otp", async (context) => {
   if (true) {
     const [, phoneNumber] = context.message.text.split(" ");
+    console.log(phoneNumber)
     const [account] = await getAccountByPhoneNumber(db, phoneNumber);
-    const tg = createTg(account.session);
+    console.log(account);
+    const tg = createTgClient(account.session);
+    console.log(tg)
     await tg.client.connect();
+    console.log("conneecttttt")
     const messages = await tg.client.getMessages(777000);
+
+    console.log(messages)
 
     return Promise.all(
       messages

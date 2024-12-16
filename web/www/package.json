@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@headlessui/react": "^2.2.0",
+    "@telegram-apps/react-router-integration": "^1.0.1",
     "@telegram-apps/sdk-react": "^2.0.19",
     "@telegram-apps/telegram-ui": "^2.1.8",
     "@unocss/reset": "^0.65.1",
@@ -30,7 +31,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.15.0",
-    "@types/react": "^18.3.12",
+    "@types/react": "^19.0.1",
     "@types/react-dom": "^18.3.1",
     "@unocss/postcss": "^0.65.1",
     "@vitejs/plugin-react-swc": "^3.5.0",

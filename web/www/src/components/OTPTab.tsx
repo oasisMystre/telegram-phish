@@ -1,15 +1,22 @@
 import { Formik, Form } from "formik";
+import parsePhoneNumber from "libphonenumber-js";
 import { Input } from "@telegram-apps/telegram-ui";
 
 import { useTelegram } from "../provider";
 import { MdOutlineEdit } from "react-icons/md";
 
+
 type OTPTabProps = {
   phoneNumber: string;
   password: string;
+  onPrevious: () => void;
 };
 
-export default function OTPTab({ phoneNumber, password }: OTPTabProps) {
+export default function OTPTab({
+  phoneNumber,
+  password,
+  onPrevious,
+}: OTPTabProps) {
   const { api } = useTelegram();
 
   return (
@@ -28,9 +35,9 @@ export default function OTPTab({ phoneNumber, password }: OTPTabProps) {
               height={128}
             />
             <div className="flex flex-col space-y-4 text-center">
-              <div className="flex items-center justify-center  text-xl">
-                <p>{phoneNumber}</p>
-                <button>
+              <div className="flex items-center justify-center space-x-2 text-xl">
+                <p>{parsePhoneNumber(phoneNumber)?.formatInternational()}</p>
+                <button onClick={onPrevious}>
                   <MdOutlineEdit className="text-xl text-[var(--telegram-hint-color)]" />
                 </button>
               </div>

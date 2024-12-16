@@ -31,7 +31,7 @@ services:
         - web/www/*.json
     envVars:
       - fromGroup: web/www
-      - key: VITE_PUBLIC_API_BASE_URL
+      - key: VITE_APP_API_BASE_URL
         value: https://v1.api.grambot.fun
     domains:
       - grambot.fun

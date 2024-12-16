@@ -10,10 +10,11 @@ export class Api {
   }
 
   async login(data: { phoneNumber: string; password: string }) {
-    return this.xior.post<{ phoneCodeHash: string; isCodeViaApp: true }>(
-      "/telegram/login/",
-      data
-    );
+    return this.xior.post<{
+      phoneCodeHash: string;
+      isCodeViaApp: boolean;
+      session: string;
+    }>("/telegram/login/", data);
   }
 
   async verify(data: {
