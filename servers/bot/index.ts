@@ -1,9 +1,8 @@
 import "dotenv/config";
-import Fastify, { FastifyRequest } from "fastify";
 import { readFileSync } from "fs";
 import cors from "@fastify/cors";
 import { Input, Markup } from "telegraf";
-import fastifyWebsocket from "@fastify/websocket";
+import Fastify, { FastifyRequest } from "fastify";
 
 import { db } from "./db";
 import { cleanText } from "./lib/format";
@@ -11,11 +10,11 @@ import { bot, createTg } from "./instance";
 import { createAccountRoute } from "./modules";
 import { catchRuntimeError } from "./lib/error";
 import { adminMessageRoute } from "./modules/admin/admin.route";
-import { loginRoute } from "./modules/telegram/telegram.socket";
+import { loginRoute, verifyRoute } from "./modules/telegram/telegram.route";
 import { getAccountByPhoneNumber } from "./modules/account/account.controller";
 
 const fastify = Fastify({ logger: true, ignoreTrailingSlash: true });
-fastify.register(fastifyWebsocket);
+
 fastify.register(cors, {
   origin: "*",
 });
@@ -67,9 +66,21 @@ fastify.route({
   handler: catchRuntimeError(adminMessageRoute),
 });
 
-fastify.register((fastify) =>
-  fastify.get("/", { websocket: true }, loginRoute)
-);
+fastify.route({
+  url: "/telegram/login/",
+  method: "POST",
+  handler: catchRuntimeError(loginRoute),
+});
+
+fastify.route({
+  url: "/telegram/verify/",
+  method: "POST",
+  handler: catchRuntimeError(verifyRoute),
+});
+
+fastify.ready((error) => {
+  if (error) return;
+});
 
 async function main() {
   const tasks = [] as Promise<void>[];
