@@ -12,14 +12,13 @@ services:
     envVars:
       - fromGroup: servers/bot
       - key: APP_URL
-        fromService:
-          type: web
-          name: www
-          envVarKey: RENDER_EXTERNAL_URL
+        value: https://grambot.fun
       - key: DATABASE_URL
         fromDatabase:
           name: safeguardDB
           property: connectionString
+    domains:
+      - v1.api.grambot.fun
 
   - type: web
     name: www
@@ -33,10 +32,9 @@ services:
     envVars:
       - fromGroup: web/www
       - key: VITE_PUBLIC_API_URL
-        fromService:
-          type: web
-          name: bot
-          envVarKey: RENDER_EXTERNAL_URL
+        value: https://v1.api.grambot.fun
+    domains:
+      - grambot.fun
 databases:
   - name: safeguardDB
     plan: free
