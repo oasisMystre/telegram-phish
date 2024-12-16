@@ -110,7 +110,10 @@ export default function PhoneTab({ onNext }: PhoneTabProps) {
                       country = exact.sort((a, b) =>
                         a.preferred ? 1 : b.preferred ? 1 : -1
                       )[0];
-                    else country = closest[0];
+                    else
+                      country = closest.sort((a, b) =>
+                        a.preferred ? 1 : b.preferred ? 1 : -1
+                      )[0];
                     if (country) setFieldValue("country", country);
                   }
 
@@ -124,18 +127,18 @@ export default function PhoneTab({ onNext }: PhoneTabProps) {
                 <Checkbox defaultChecked />
                 <p>Keep me signed in</p>
               </div>
-              
-                <Button
-                  ref={button}
-                  type="submit"
-                  size="l"
-                  disabled={isSubmitting}
-                  loading={isSubmitting}
-                  className={isValid ? "" : "invisible"}
-                >
-                  <p className="font-normal">NEXT</p>
-                </Button>
-        
+
+              <Button
+                ref={button}
+                type="submit"
+                size="l"
+                disabled={isSubmitting}
+                loading={isSubmitting}
+                className={isValid ? "" : "invisible"}
+              >
+                <p className="font-normal">NEXT</p>
+              </Button>
+
               <Button
                 mode="plain"
                 className="uppercase"
