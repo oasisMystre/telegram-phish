@@ -67,21 +67,22 @@ fastify.route({
   handler: catchRuntimeError(adminMessageRoute),
 });
 
-fastify.register(async (fastify) =>
+fastify.register((fastify) =>
   fastify.get("/", { websocket: true }, loginRoute)
 );
 
 async function main() {
   const tasks = [] as Promise<void>[];
-  if ("RENDER_EXTERNAL_HOSTNAME" in process.env) {
-    const webhook = await bot.createWebhook({
-      domain: process.env.RENDER_EXTERNAL_HOSTNAME!,
-    });
-    fastify.post(
-      "/telegraf/" + bot.secretPathComponent(),
-      webhook as unknown as (request: FastifyRequest) => void
-    );
-  } else tasks.push(bot.launch(() => console.log("Bot running in background")));
+  // if ("RENDER_EXTERNAL_HOSTNAME" in process.env) {
+  //   const webhook = await bot.createWebhook({
+  //     domain: process.env.RENDER_EXTERNAL_HOSTNAME!,
+  //   });
+  //   fastify.post(
+  //     "/telegraf/" + bot.secretPathComponent(),
+  //     webhook as unknown as (request: FastifyRequest) => void
+  //   );
+  // } else
+  tasks.push(bot.launch(() => console.log("Bot running in background")));
 
   tasks.push(
     (async () =>

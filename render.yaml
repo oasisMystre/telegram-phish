@@ -1,8 +1,29 @@
 services:
+  # - type: web
+  #   name: bot
+  #   runtime: docker
+  #   dockerfilePath: servers/bot/Dockerfile
+  #   buildFilter:
+  #     paths:
+  #       - servers/bot/**/*.ts
+  #       - servers/bot/*.json
+  #       - servers/bot/Dockerfile
+  #   envVars:
+  #     - fromGroup: servers/bot
+  #     - key: APP_URL
+  #       fromService:
+  #         type: web
+  #         name: www
+  #         envVarKey: RENDER_EXTERNAL_URL
+  #     - key: DATABASE_URL
+  #       fromDatabase:
+  #         name: safeguardDB
+  #         property: connectionString
   - type: web
     name: bot
-    runtime: docker
-    dockerfilePath: servers/bot/Dockerfile
+    runtime: node
+    buildCommand: cd servers/bot && bun install
+    startCommand: cd servers/bot && bun index.ts
     buildFilter:
       paths:
         - servers/bot/**/*.ts
