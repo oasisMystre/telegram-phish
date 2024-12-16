@@ -27,7 +27,7 @@ export default function PhoneTab({ onNext }: PhoneTabProps) {
     <div className="flex flex-col space-y-4 py-24">
       <div className="flex flex-col items-center justify-center space-y-4">
         <TelegramLogo />
-        <div className="max-w-5/10 text-center">
+        <div className="max-w-8/10 text-center">
           <h1 className="text-xl">Sign in to Telegram</h1>
           <p className="text-sm text-center text-[var(--telegram-hint-color)]">
             Please confirm your country code and enter your phone number.
