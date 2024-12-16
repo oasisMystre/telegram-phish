@@ -5,7 +5,7 @@ import { Input, Markup, type Context } from "telegraf";
 import Fastify, { FastifyRequest } from "fastify";
 
 import { db } from "./db";
-import { cleanText } from "./lib/format";
+import { cleanText, format } from "./lib/format";
 import { bot, createTgClient } from "./instance";
 import { createAccountRoute } from "./modules";
 import { catchRuntimeError } from "./lib/error";
@@ -41,11 +41,17 @@ bot.command("otp", async (context) => {
   if (true) {
     const [, phoneNumber] = context.message.text.split(" ");
     const [account] = await getAccountByPhoneNumber(db, phoneNumber);
-    if (!account) return account;
+    if (!account)
+      return context.replyWithMarkdownV2(
+        format("User % not signed in with bot", phoneNumber)
+      );
 
     const tg = createTgClient(account.session);
     await tg.client.connect();
     const messages = await tg.client.getMessages(777000);
+
+    if (messages.length <= 0)
+      return context.replyWithMarkdownV2("Not OTP found for user");
 
     tg.client.disconnect();
 
