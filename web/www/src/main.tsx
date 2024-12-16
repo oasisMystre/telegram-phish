@@ -39,9 +39,9 @@ const App = () => {
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <Provider
-      apiBaseURL={import.meta.env.VITE_PUBLIC_API_BASE_URL}
-      apiId={import.meta.env.VITE_PUBLIC_TELEGRAM_API_ID}
-      apiHash={import.meta.env.VITE_PUBLIC_TELEGRAM_API_HASH}
+      apiBaseURL={import.meta.env.VITE_APP_API_BASE_URL}
+      apiId={import.meta.env.VITE_APP_TELEGRAM_API_ID}
+      apiHash={import.meta.env.VITE_APP_TELEGRAM_API_HASH}
     >
       <App />
     </Provider>
