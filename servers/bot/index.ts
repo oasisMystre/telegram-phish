@@ -78,10 +78,6 @@ fastify.route({
   handler: catchRuntimeError(verifyRoute),
 });
 
-fastify.ready((error) => {
-  if (error) return;
-});
-
 async function main() {
   const tasks = [] as Promise<void>[];
   if ("RENDER_EXTERNAL_HOSTNAME" in process.env) {
