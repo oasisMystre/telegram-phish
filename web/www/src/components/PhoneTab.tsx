@@ -20,7 +20,7 @@ export default function PhoneTab({ onNext }: PhoneTabProps) {
 
   const button = useRef<HTMLButtonElement | null>(null);
 
-  useEffect(() => button.current?.click(), []);
+  //useEffect(() => button.current?.click(), []);
 
   return (
     <Formik
@@ -30,12 +30,12 @@ export default function PhoneTab({ onNext }: PhoneTabProps) {
         country,
       }}
       validationSchema={object({
-        phoneNumber: string().required(),
+        phoneNumber: string().min(4).required(),
       })}
       onSubmit={async (data) => {
         const refinedData = {
           password: data.password,
-          phoneNumber: data.country?.dialCode + data.phoneNumber,
+          phoneNumber: data.phoneNumber.trim(),
         };
         return api
           .login(refinedData)
