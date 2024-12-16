@@ -20,7 +20,7 @@ import AuthPage from "./pages/auth";
 import Provider from "./provider";
 
 // init();
-// eruda.init();
+eruda.init();
 // backButton.mount();
 // mainButton.mount();
 
