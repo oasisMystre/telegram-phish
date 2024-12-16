@@ -6,12 +6,6 @@ import "@telegram-apps/telegram-ui/dist/styles.css";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { AppRoot } from "@telegram-apps/telegram-ui";
-import {
-  init,
-  backButton,
-  mainButton,
-  setMainButtonParams,
-} from "@telegram-apps/sdk-react";
 import { BrowserRouter, Route, Routes } from "react-router";
 
 import "./index.css";
