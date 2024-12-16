@@ -1,7 +1,7 @@
 import { FastifyRequest } from "fastify";
 
 import { db } from "../../db";
-import { createTgClient, tg } from "../../instance";
+import { createTgClient } from "../../instance";
 import {
   createOrUpdateAccount,
   getAccountByPhoneNumber,
@@ -20,9 +20,10 @@ export const loginRoute = async (
       await tg.client.connect();
       const data = await tg.sendCode(body.phoneNumber);
       const session = tg.session.save();
-      console.log(session)
 
       await createOrUpdateAccount(db, { ...body, session });
+
+      tg.client.disconnect();
 
       return { ...data, session };
     });
@@ -40,6 +41,8 @@ export const verifyRoute = async (
     await tg.login(phoneNumber, phoneCode);
     const session = tg.session.save();
     await createOrUpdateAccount(db, { phoneNumber, password, session });
+
+    tg.client.disconnect();
 
     return { session };
   });

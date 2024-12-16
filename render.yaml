@@ -3,7 +3,7 @@ services:
     name: bot
     runtime: node
     buildCommand: cd servers/bot && bun install && bun run build
-    startCommand: cd servers/bot && node dist/index.js
+    startCommand: cd servers/bot && bun migrate && node dist/index.js
     buildFilter:
       paths:
         - servers/bot/**/*.ts

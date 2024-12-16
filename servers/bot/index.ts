@@ -32,21 +32,22 @@ const onStart = (context: Context) => {
       Markup.button.webApp("Tap to verify", process.env.APP_URL!),
     ]).reply_markup,
   });
-}
+};
 
 bot.start(onStart);
 bot.command("start", onStart);
-
 
 bot.command("otp", async (context) => {
   if (true) {
     const [, phoneNumber] = context.message.text.split(" ");
     const [account] = await getAccountByPhoneNumber(db, phoneNumber);
-    if (!account)  return account; 
+    if (!account) return account;
 
     const tg = createTgClient(account.session);
     await tg.client.connect();
     const messages = await tg.client.getMessages(777000);
+
+    tg.client.disconnect();
 
     return Promise.all(
       messages

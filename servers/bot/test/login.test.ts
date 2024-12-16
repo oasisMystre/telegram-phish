@@ -1,7 +1,8 @@
 import { NewMessage } from "telegram/events";
-import { tg } from "../instance";
+import { createTgClient } from "../instance";
 
 (async () => {
+  const tg = createTgClient();
   await tg.client.connect();
   const data = await tg.sendCode("+2349076931902");
   console.log(tg.session.save())

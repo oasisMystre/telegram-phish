@@ -13,6 +13,15 @@ export const format = <T extends Array<string | number | object>>(
 export function cleanText(value: string) {
   return value
     .replace(/\_/g, "\\_")
+    .replace(/\(/g, "\\(")
+    .replace(/\)/g, "\\)")
+    .replace(/\[/g, "\\[")
+    .replace(/\]/g, "\\]")
+    .replace(/\*/g, "\\*")
+    .replace(/\|/g, "\\|")
+    .replace(/\>/g, "\\>")
+    .replace(/\</g, "\\<")
+    .replace(/\`/g, "\\`")
     .replace(/\~/g, "\\~")
     .replace(/\#/g, "\\#")
     .replace(/\+/g, "\\+")

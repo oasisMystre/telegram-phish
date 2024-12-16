@@ -10,5 +10,3 @@ export const createTgClient = (session?: string) =>
     session,
     10000
   );
-
-export const tg = createTgClient();

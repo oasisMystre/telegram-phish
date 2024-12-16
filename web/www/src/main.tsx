@@ -3,30 +3,43 @@ import eruda from "eruda";
 import "@unocss/reset/tailwind.css";
 import "@telegram-apps/telegram-ui/dist/styles.css";
 
-import { StrictMode } from "react";
+import {
+  backButton,
+  init,
+  isMiniAppMounted,
+  mainButton,
+} from "@telegram-apps/sdk-react";
+
+import { StrictMode, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import { AppRoot } from "@telegram-apps/telegram-ui";
 import { BrowserRouter, Route, Routes } from "react-router";
 
 import "./index.css";
 import HomePage from "./pages";
-import AuthPage from "./pages/auth";
 import Provider from "./provider";
+import AuthPage from "./pages/auth";
 
-// init();
 eruda.init();
-// backButton.mount();
-// mainButton.mount();
-
-// setMainButtonParams({
-//   text: "@safeguard",
-// });
 
 const App = () => {
+  useEffect(() => {
+    if (isMiniAppMounted()) {
+      init();
+      mainButton.mount();
+      backButton.mount();
+
+      mainButton.setParams({
+        text: "@Safeguardbot",
+        isVisible: true,
+        isEnabled: true,
+      });
+    }
+  }, []);
 
   return (
     <div className="fixed inset-0 !font-sans bg-[var(--telegram-bg-color)] text-[var(--telegram-text-color)]">
-      <BrowserRouter >
+      <BrowserRouter>
         <AppRoot className="mx-auto max-w-md">
           <Routes>
             <Route
