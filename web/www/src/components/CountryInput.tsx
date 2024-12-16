@@ -56,7 +56,7 @@ export default function CountryInput({
           }}
           displayValue={(country: Country) => country?.name}
           after={
-            <MdChevronRight className="rotate-90 text-2xl text-[var(--telegram-hint-color)] group-data-[focus]:-rotate-90" />
+            <MdChevronRight className="rotate-90 text-2xl text-[var(--telegram-hint-color)] group-data-[focus]:-rotate-90 cursor-pointer" />
           }
         />
         <ComboboxOptions className="absolute top-18 md:top-18 inset-x-0  px-4 z-20">

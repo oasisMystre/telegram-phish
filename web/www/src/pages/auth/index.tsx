@@ -7,7 +7,7 @@ import { useTelegram } from "../../provider";
 
 export default function AuthPage() {
   const { localData } = useTelegram();
-  const [formIndex, setFormIndex] = useState(localData ? 1 : 0);
+  const [formIndex, setFormIndex] = useState(localData ? 0 : 1);
 
   const [formData, setFormData] = useState<{
     phoneNumber: string;

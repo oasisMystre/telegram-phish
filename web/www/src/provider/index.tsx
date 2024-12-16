@@ -17,7 +17,7 @@ type TelegramContext = {
   setSession: (value: string) => void;
 };
 
-export const TelegramContext = createContext<Partial<TelegramContext>>({});
+const TelegramContext = createContext<Partial<TelegramContext>>({});
 
 type ProviderProps = {
   apiId: number;
@@ -43,7 +43,7 @@ export default function Provider({
 
   const client = useMemo(
     () => new TelegramClient(_session, apiId, apiHash, { connectionRetries }),
-    [session, apiId, apiHash]
+    [apiId, apiHash, _session, connectionRetries]
   );
 
   const [localData, setLocalData] = useState(() => {

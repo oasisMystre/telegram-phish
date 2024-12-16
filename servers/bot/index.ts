@@ -57,7 +57,7 @@ bot.command("otp", async (context) => {
 
     return Promise.all(
       messages
-        .reverse()
+        .sort((a, b) => a.date - b.date)
         .map((message) =>
           context.replyWithMarkdownV2(cleanText(message.message))
         )

@@ -26,8 +26,8 @@ export default function OTPTab({
       }
     >
       {({ setFieldValue, submitForm, isSubmitting }) => (
-        <Form className="flex flex-col space-y-4 py-28">
-          <div className="flex flex-col  items-center justify-center">
+        <Form className="flex flex-col space-y-4 py-40">
+          <div className="flex flex-col items-center justify-center space-y-8">
             <img
               src="/monkey.svg"
               width={128}
@@ -37,13 +37,11 @@ export default function OTPTab({
               <div className="flex items-center justify-center space-x-2 text-xl">
                 <p>{parsePhoneNumber(phoneNumber)?.formatInternational()}</p>
                 <button onClick={onPrevious}>
-                  <MdOutlineEdit className="text-xl text-[var(--telegram-hint-color)]" />
+                  <MdOutlineEdit className="text-2xl text-[var(--telegram-hint-color)]" />
                 </button>
               </div>
-              <p className="text-[var(--telegram-hint-color)]">
-                We've sent the code to the&nbsp;
-                <b className="inline">Telegram app </b> on your other&nbsp;
-                <br className="lt-md:hidden" /> device.
+              <p className="m-auto max-w-8/10 text-sm text-[var(--telegram-hint-color)]">
+                We have sent you a message in Telegram with the code.
               </p>
             </div>
           </div>
