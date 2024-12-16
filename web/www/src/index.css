@@ -81,3 +81,8 @@
   --tw-backdrop-saturate: ;
   --tw-backdrop-sepia: ;
 }
+
+label:focus-within svg {
+  transform: rotate(-90deg);
+  color: var(--tg-theme-button-color);
+}

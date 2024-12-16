@@ -13,8 +13,6 @@ export default function AuthPage() {
     phoneCode: string;
   }>({ password: "", phoneCode: "", phoneNumber: "" });
 
-   console.log(formData)
-
   return (
     <TabGroup
       key={formIndex}

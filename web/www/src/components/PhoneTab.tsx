@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Form, Formik } from "formik";
 import { object, string } from "yup";
 import countryList from "country-list-with-dial-code-and-flag";
@@ -14,6 +14,10 @@ type PhoneTabProps = {
 export default function PhoneTab({ onNext }: PhoneTabProps) {
   const { api } = useTelegram();
   const [query, setQuery] = useState<string | null>("");
+
+  const button = useRef<HTMLButtonElement | null>(null);
+
+  useEffect(() => button.current?.click(), []);
 
   return (
     <Formik
@@ -36,7 +40,7 @@ export default function PhoneTab({ onNext }: PhoneTabProps) {
           .then(onNext);
       }}
     >
-      {({ values, isSubmitting, setFieldValue, errors }) => (
+      {({ values, isSubmitting, setFieldValue, isValid }) => (
         <Form
           autoComplete="off"
           className="flex flex-col py-28"
@@ -61,13 +65,14 @@ export default function PhoneTab({ onNext }: PhoneTabProps) {
               query={query}
               setQuery={setQuery}
             />
+            {values.phoneNumber}
             <Input
               name="phoneNumber"
               type="tel"
               before={values.country?.dialCode}
               placeholder="Your Phone number"
-              defaultValue={values.phoneNumber}
               autoComplete="off"
+              value={values.phoneNumber}
               onChange={(event) => {
                 const value = event.target.value;
                 setFieldValue("phoneNumber", value);
@@ -75,8 +80,9 @@ export default function PhoneTab({ onNext }: PhoneTabProps) {
             />
           </div>
           <div className="flex flex-col px-4">
-            {Object.keys(errors).length <= 0 && (
+            {isValid && (
               <Button
+                ref={button}
                 type="submit"
                 disabled={isSubmitting}
                 loading={isSubmitting}
