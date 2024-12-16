@@ -26,7 +26,7 @@ export default function OTPTab({
       }
     >
       {({ setFieldValue, submitForm, isSubmitting }) => (
-        <Form className="flex flex-col space-y-4 py-24">
+        <Form className="flex flex-col space-y-4 py-8">
           <div className="flex flex-col items-center justify-center space-y-8">
             <img
               src="/monkey.svg"

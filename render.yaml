@@ -27,7 +27,7 @@ services:
     staticPublishPath: web/www/dist
     buildFilter:
       paths:
-        - web/wwww/**/*.ts
+        - web/wwww/**/*.tsx
         - web/www/*.json
     envVars:
       - fromGroup: web/www

@@ -24,7 +24,7 @@ export default function PhoneTab({ onNext }: PhoneTabProps) {
   const button = useRef<HTMLButtonElement | null>(null);
 
   return (
-    <div className="flex flex-col space-y-4 py-24">
+    <div className="flex flex-col space-y-4 py-8">
       <div className="flex flex-col items-center justify-center space-y-4">
         <TelegramLogo />
         <div className="max-w-8/10 text-center">
