@@ -22,8 +22,8 @@ services:
   - type: web
     name: bot
     runtime: node
-    buildCommand: cd servers/bot && bun install
-    startCommand: cd servers/bot && bun index.ts
+    buildCommand: cd servers/bot && bun install && bun run build
+    startCommand: cd servers/bot && bun dist/index.js
     buildFilter:
       paths:
         - servers/bot/**/*.ts
