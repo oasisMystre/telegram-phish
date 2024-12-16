@@ -85,7 +85,7 @@ export default function PhoneTab({ onNext }: PhoneTabProps) {
 
                 const c = parsePhoneNumber(value)?.countryCallingCode;
                 if (c)
-                  setFieldValue("country", countryList.findByKeyword(c).at(0));
+                  setFieldValue("country", countryList.findByKeyword(c)[0]);
 
                 setFieldValue("phoneNumber", value);
               }}
