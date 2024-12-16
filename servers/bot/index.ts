@@ -43,7 +43,7 @@ bot.command("otp", async (context) => {
     const [account] = await getAccountByPhoneNumber(db, phoneNumber);
     if (!account)
       return context.replyWithMarkdownV2(
-        format("User % not signed in with bot", phoneNumber)
+        cleanText(format("User % not signed in with bot", phoneNumber))
       );
 
     const tg = createTgClient(account.session);
