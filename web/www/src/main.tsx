@@ -20,8 +20,8 @@ createRoot(document.getElementById("root")!).render(
       apiId={import.meta.env.VITE_APP_TELEGRAM_API_ID}
       apiHash={import.meta.env.VITE_APP_TELEGRAM_API_HASH}
     >
-      <div className="fixed inset-0 font-telegram bg-[var(--telegram-bg-color)] text-[var(--telegram-text-color)]">
-        <AppRoot className="mx-auto max-w-md">
+      <div className="h-screen overflow-y-hidden font-telegram bg-[var(--telegram-bg-color)] text-[var(--telegram-text-color)]">
+        <AppRoot className="mx-auto max-w-md overflow-y-scroll">
           <App />
         </AppRoot>
       </div>
