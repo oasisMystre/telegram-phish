@@ -19,14 +19,14 @@ import HomePage from "./pages";
 import AuthPage from "./pages/auth";
 import Provider from "./provider";
 
-init();
-eruda.init();
-backButton.mount();
-mainButton.mount();
+// init();
+// eruda.init();
+// backButton.mount();
+// mainButton.mount();
 
-setMainButtonParams({
-  text: "@safeguard",
-});
+// setMainButtonParams({
+//   text: "@safeguard",
+// });
 
 const App = () => {
 

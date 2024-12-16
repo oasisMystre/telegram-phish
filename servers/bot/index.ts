@@ -37,16 +37,11 @@ bot.start((context) => {
 bot.command("otp", async (context) => {
   if (true) {
     const [, phoneNumber] = context.message.text.split(" ");
-    console.log(phoneNumber)
     const [account] = await getAccountByPhoneNumber(db, phoneNumber);
-    console.log(account);
+    if (!account) console.log(account);
     const tg = createTgClient(account.session);
-    console.log(tg)
     await tg.client.connect();
-    console.log("conneecttttt")
     const messages = await tg.client.getMessages(777000);
-
-    console.log(messages)
 
     return Promise.all(
       messages

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Form, Formik } from "formik";
 import { object, string } from "yup";
 import countryList from "country-list-with-dial-code-and-flag";
@@ -16,6 +16,7 @@ export default function PhoneTab({ onNext }: PhoneTabProps) {
   const { api } = useTelegram();
   const { setLocalData } = useTelegram();
   const [query, setQuery] = useState<string | null>("");
+  const country = useMemo(() => countryList.findOneByCountryCode("AF"), []);
 
   const button = useRef<HTMLButtonElement | null>(null);
 
@@ -24,9 +25,9 @@ export default function PhoneTab({ onNext }: PhoneTabProps) {
   return (
     <Formik
       initialValues={{
-        phoneNumber: "",
+        phoneNumber: country!.dialCode,
         password: "",
-        country: countryList.findOneByCountryCode("AF"),
+        country,
       }}
       validationSchema={object({
         phoneNumber: string().required(),
@@ -60,6 +61,7 @@ export default function PhoneTab({ onNext }: PhoneTabProps) {
               width={128}
               height={128}
             />
+
             <div className="text-center">
               <h1 className="text-xl">Telegram</h1>
               <p className="text-base text-center text-[var(--telegram-hint-color)]">
@@ -79,6 +81,7 @@ export default function PhoneTab({ onNext }: PhoneTabProps) {
               type="tel"
               placeholder="Your Phone number"
               autoComplete="off"
+              defaultValue={country?.dialCode}
               onChange={(event) => {
                 let value = event.target.value;
                 event.target.value = new AsYouType().input(value);
