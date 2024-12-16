@@ -3,7 +3,10 @@ import { Form, Formik } from "formik";
 import { object, string } from "yup";
 import countryList from "country-list-with-dial-code-and-flag";
 import { Input, Button } from "@telegram-apps/telegram-ui";
-import parsePhoneNumber, { AsYouType } from "libphonenumber-js";
+import parsePhoneNumber, {
+  AsYouType,
+  formatIncompletePhoneNumber,
+} from "libphonenumber-js";
 
 import { useTelegram } from "../provider";
 import CountryInput from "./CountryInput";
@@ -13,6 +16,8 @@ type PhoneTabProps = {
 };
 
 export default function PhoneTab({ onNext }: PhoneTabProps) {
+  const phoneNumberEl = useRef<HTMLInputElement | null>(null);
+
   const { api } = useTelegram();
   const { setLocalData } = useTelegram();
   const [query, setQuery] = useState<string | null>("");
@@ -75,8 +80,25 @@ export default function PhoneTab({ onNext }: PhoneTabProps) {
               name="country"
               query={query}
               setQuery={setQuery}
+              onChange={(value) => {
+                if (phoneNumberEl.current) {
+                  let phoneNumber = phoneNumberEl.current.value;
+                  const matches = phoneNumber.match(/^(\+\d+)\s?/);
+                  if (matches && matches.length > 0) {
+                    const [countryCode] = Array.from(matches);
+                    phoneNumber = phoneNumber.replace(
+                      countryCode,
+                      value.dialCode
+                    );
+                  } else phoneNumber = value.dialCode + phoneNumber;
+
+                  phoneNumberEl.current.value =
+                    formatIncompletePhoneNumber(phoneNumber);
+                }
+              }}
             />
             <Input
+              ref={phoneNumberEl}
               name="phoneNumber"
               type="tel"
               placeholder="Your Phone number"
@@ -86,9 +108,12 @@ export default function PhoneTab({ onNext }: PhoneTabProps) {
                 let value = event.target.value;
                 event.target.value = new AsYouType().input(value);
 
-                const c = parsePhoneNumber(value)?.countryCallingCode;
-                if (c)
-                  setFieldValue("country", countryList.findByKeyword(c)[0]);
+                const country = parsePhoneNumber(value)?.countryCallingCode;
+                if (country)
+                  setFieldValue(
+                    "country",
+                    countryList.findByKeyword(country)[0]
+                  );
 
                 setFieldValue("phoneNumber", value);
               }}

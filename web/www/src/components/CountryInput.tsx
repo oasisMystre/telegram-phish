@@ -16,12 +16,14 @@ type CountryInputProps = {
   name: string;
   query: string | null;
   setQuery: React.Dispatch<React.SetStateAction<string | null>>;
+  onChange?: (value: Country) => void;
 };
 
 export default function CountryInput({
   name,
   query,
   setQuery,
+  onChange,
 }: CountryInputProps) {
   const { values, setFieldValue } = useFormikContext<{
     [key: string]: Country | null;
@@ -37,7 +39,10 @@ export default function CountryInput({
     <Combobox
       immediate
       value={value}
-      onChange={(value) => setFieldValue(name, value)}
+      onChange={(value) => {
+        setFieldValue(name, value);
+        if (onChange && value) onChange(value);
+      }}
       onClose={() => setQuery("")}
     >
       <div className="relative">
@@ -46,6 +51,7 @@ export default function CountryInput({
           className="group"
           onChange={(event) => {
             const input = event.target;
+
             setQuery(input.value);
           }}
           displayValue={(country: Country) => country?.name}
@@ -53,8 +59,8 @@ export default function CountryInput({
             <MdChevronRight className="rotate-90 text-2xl text-[var(--telegram-hint-color)] group-data-[focus]:-rotate-90" />
           }
         />
-        <ComboboxOptions className="absolute top-16 md:top-24 inset-x-0  px-4 z-20">
-          <List className="max-h-sm bg-[var(--telegram-bg-color)] overflow-y-scroll shadow-lg shadow-black/50 dark:shadow-lg dark:shadow-black/80">
+        <ComboboxOptions className="absolute top-18 md:top-18 inset-x-0  px-4 z-20">
+          <List className="max-h-sm bg-[var(--telegram-bg-color)] overflow-y-scroll shadow-lg shadow-black/50 rounded-b-xl dark:shadow-lg dark:shadow-black/80">
             {countries.map((country, index) => (
               <ComboboxOption
                 key={index}

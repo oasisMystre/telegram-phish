@@ -1,10 +1,9 @@
 import { Formik, Form } from "formik";
 import parsePhoneNumber from "libphonenumber-js";
 import { Input } from "@telegram-apps/telegram-ui";
-
-import { useTelegram } from "../provider";
 import { MdOutlineEdit } from "react-icons/md";
 
+import { useTelegram } from "../provider";
 
 type OTPTabProps = {
   phoneNumber: string;
@@ -43,7 +42,8 @@ export default function OTPTab({
               </div>
               <p className="text-[var(--telegram-hint-color)]">
                 We've sent the code to the&nbsp;
-                <b>Telegram app </b> on your other <br /> device.
+                <b className="inline">Telegram app </b> on your other&nbsp;
+                <br className="lt-md:hidden" /> device.
               </p>
             </div>
           </div>
